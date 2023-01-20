@@ -1,0 +1,4 @@
+# .ENV AND LOG FILES.env
+.env
+logs
+*.log
