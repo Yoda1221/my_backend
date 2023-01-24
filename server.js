@@ -32,8 +32,9 @@ const time  = new Date()
 const df    = new Intl.DateTimeFormat("hu-hu", {
     dateStyle: "full",
     timeStyle: "full"
-}) 
+})
+
 httpServer.listen( PORT, () => {
     logEvents(`SERVER IS RUNNING ON PORT: ${PORT}`, 'serverRunLog.txt')
-    console.log(`\n\n/     \\ \n|==O==|\n\\     / \n\nSERVER IS RUNNING ON PORT: ${PORT.brightCyan.bold}\t${colors.gray(df.format(time))}\n`.yellow)
+    console.log(`\n\n⎛      ⎞ \n⎟==()==⎢\n⎝      ⎠ \n\nSERVER IS RUNNING ON PORT:\t${PORT.brightCyan.bold}\t${colors.gray(df.format(time))}\n`.yellow)
 })
