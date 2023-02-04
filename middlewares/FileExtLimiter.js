@@ -17,4 +17,4 @@ const FileExtLimiter = (allowedExtArray) => {
     }
 }
 
-export default FileExtLimiter
+module.exports = FileExtLimiter

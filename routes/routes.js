@@ -1,16 +1,17 @@
-const express   = require('express')
-const router    = express.Router()
-const path      = require('path')
-const { loginP } = require('../controllers/AuthController')
+const express       = require('express')
+const router        = express.Router()
+const path          = require('path')
+const { loginP }    = require('../controllers/AuthController')
 const { sendMessage, createCompletion } = require("../controllers/OpenAi")
 const { allRecipes, cerateRecipe, deleteRecipe, updateRecipe } = require('../controllers/RecipeController')
 const { allVehicle } = require('../controllers/VehicleController')
-const { uploadFile } = require('../controllers/DataController')
+
 //  FILEUPLOAD
-const fileUpload    = require('express-fileupload')
-//  MULTER
-const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const { uploadFile }        = require('../controllers/DataController')
+const fileUpload            = require('express-fileupload')
+const FileExtLimiter        = require('../middlewares/FileExtLimiter')
+const FileSizeLimiter       = require('../middlewares/FileSizeLimiter')
+const FilesPayloadExists    = require('../middlewares/FilesPayloadExists')
 
 router.get('^/$| /index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'))
@@ -26,7 +27,7 @@ router.route('/authV').post(loginP)
 router.route('/vehicles').get(allVehicle)
 
 //  RECIPES AUTH BACKEND
-
+//  SOON
 
 //  RECIPE BACKEND
 router.route('/recipes')
@@ -37,6 +38,12 @@ router.route('/recipes')
 
 
 //  UPLOAD FILE
-router.route('/image').post(fileUpload({ createParentPath: true }), uploadFile)
+router.route('/image').post(
+    fileUpload({ createParentPath: true }), 
+    FileSizeLimiter,
+    FilesPayloadExists,
+    FileExtLimiter(['.png', '.jpg', '.jpeg']),
+    uploadFile
+)
 
 module.exports = router

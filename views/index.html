@@ -10,7 +10,7 @@
         body {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 1.5rem;
-            background-color: #333;
+            background-color: rgba(29,33,36,1);
             color: whitesmoke;
 
             width: 100vw;
@@ -28,44 +28,38 @@
             flex-direction: column;
             justify-content: center;
         }
-        input,
-        button {font: inherit;width: max-content;}
-        form {display: flex;flex-flow: column nowrap;gap: 1.5rem;}
+        #h2, #h3 { font-size: 1rem;}
+        input { font: inherit; width: max-content; }
+        form { display: flex; flex-flow: column nowrap; gap: 1.5rem; }
     </style>
     <title>My Backend</title>
 </head>
 <body>
     <div class="container">
         <h1>My Backend</h1>
-        <h2>HOME</h2>
-        
+        <h2 class="mb-5">HOME</h2>
         <!-- UPLOAD FILE TEST START -->
             <form id="uploadForm">
                 <input type="file" id="myFiles" accept="image/*" multiple />
-                <button>Submit</button>
+                <button class="btn btn-sm btn-info mb-3">Submit</button>
             </form>
             <h2 id="h2"></h2>
-            <h3></h3>
+            <h3 id="h3"></h3>
         <!-- UPLOAD FILE TEST END -->
     </div>
 <!-- UPLOAD FILE TEST START -->
     <script>
         const form = document.getElementById('uploadForm')
         const sendFiles = async () => {
-            // Object 
+            //  OBJECT
             const myFiles = document.getElementById('myFiles').files
             const formData = new FormData()
-            Object.keys(myFiles).forEach(key => {
-                formData.append(myFiles.item(key).name, myFiles.item(key))
-            })
-            const response = await fetch('http://localhost:5090/image', {
-                method: 'POST',
-                body: formData
-            })
+            Object.keys(myFiles).forEach(key => {formData.append(myFiles.item(key).name, myFiles.item(key))})
+            const response = await fetch('http://localhost:5090/image', { method: 'POST', body: formData })
             const json = await response.json()
             const h2 = document.querySelector('#h2')
+            const h3 = document.querySelector('#h3')
             h2.textContent = `Status: ${json?.status}`
-            const h3 = document.querySelector('h3')
             h3.textContent = json?.message
             console.log(json)
         }
