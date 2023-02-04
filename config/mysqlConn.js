@@ -1,6 +1,7 @@
 const mysql     = require('mysql')
 const colors    = require('colors')
 const { logEvents, logger } = require('../middlewares/LogEvents')
+const { xWing } = require('../starwars/starships')
 
 require('dotenv').config()
 
@@ -13,10 +14,7 @@ const mysqlConn = mysql.createConnection({
 })
 
 const time  = new Date()
-const df    = new Intl.DateTimeFormat("hu-hu", {
-    dateStyle: "full",
-    timeStyle: "full"
-}) 
+const df    = new Intl.DateTimeFormat("hu-hu", { dateStyle: "full", timeStyle: "full"}) 
 
 mysqlConn.connect( (err) => {
     if (err) {
@@ -25,7 +23,9 @@ mysqlConn.connect( (err) => {
       return
     }
     logEvents(`Connected to mySqlDb, Id:\t${mysqlConn.threadId}`, 'dbConnectLog.txt')
-    console.log(`Connected to mySqlDb, Id:\t${colors.yellow(mysqlConn.threadId)}\t${colors.cyan(df.format(time))}\n`.gray )
+
+    console.log(xWing.magenta)
+    console.log(`\nConnected to mySqlDb, Id:\t${colors.cyan(mysqlConn.threadId)}\t${colors.gray(df.format(time))}\n`.magenta )
 })
 
 module. exports = mysqlConn

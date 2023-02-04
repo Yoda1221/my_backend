@@ -64,12 +64,14 @@ const updateDataInDb = (query) => {
 }
 
 /**
- ** DELETE DATA IN DATABASE
+ ** DELETE DATA FROM DATABASE
  * 
- * @param { String } query 
+ * @param { String } id 
+ * @param { String } tableName 
  * @returns 
  */
-const deleteDataFromDb = (id) => {
+const deleteDataFromDb = (id, tableName) => {
+    const query = `DELETE FROM ${tableName} WHERE id="${id}" `
     const data = new Promise( async (resolve, reject) => {
         await mysqlConn.query(query, (err, result) => {
             if(err) return reject(err)
@@ -107,7 +109,8 @@ const services = {
     getDataFromDb,
     saveDataToDb,
     timeStamp,
-    updateDataInDb
+    updateDataInDb,
+    deleteDataFromDb
 }
 
 module.exports = services

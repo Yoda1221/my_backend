@@ -4,9 +4,13 @@ const path          = require('path')
 const colors        = require('colors')
 const express       = require('express')
 const cookieParser  = require('cookie-parser')
+const fileUpload    = require('express-fileupload')
 const corsOptions   = require('./config/corsOprions')
 const errorHandler  = require('./middlewares/ErrorHandler')
 const { logEvents, logger } = require('./middlewares/logEvents')
+
+const { milleniumFalcon, tieFighter } = require('./starwars/starships')
+
 require('dotenv').config()
 
 const app           = express()
@@ -20,6 +24,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use('/', require('./routes/routes'))
 app.use('/', express.static(path.join(__dirname, 'public')))
+app.use(express.urlencoded({ extended: false }))
 
 app.all('*', (req, res) => {
     res.status(404)
@@ -36,5 +41,5 @@ const df    = new Intl.DateTimeFormat("hu-hu", {
 
 httpServer.listen( PORT, () => {
     logEvents(`SERVER IS RUNNING ON PORT: ${PORT}`, 'serverRunLog.txt')
-    console.log(`\n\n⎛      ⎞ \n⎟==()==⎢\n⎝      ⎠ \n\nSERVER IS RUNNING ON PORT:\t${PORT.brightCyan.bold}\t${colors.gray(df.format(time))}\n`.yellow)
+    console.log(`\n\n${tieFighter}\n\nSERVER IS RUNNING ON PORT:\t${PORT.brightCyan.bold}\t${colors.gray(df.format(time))}\n`.yellow)
 })

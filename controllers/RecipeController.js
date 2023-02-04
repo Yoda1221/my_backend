@@ -12,31 +12,53 @@ const services      = require('../services/methods')
  ** param2 { Object} PARAMETERS TO WHERE STRING SUCH AS { id: 1 } 
  */
 const allRecipes = async (req, res) => {
-    const respRecipe        = await services.getDataFromDb({base: "recipes"}, {  })
-    //const respIndegrients   = await services.getDataFromDb({base: "ingredients"}, {  })
-    res.status(200).json({respRecipe})  //  , respIndegrients
+    const resp  = await services.getDataFromDb({base: "recipes"}, {  })
+    res.status(200).json({ resp })
 }
 
 const cerateRecipe = async (req, res) => {
-    /*const file = req?.files?.img ? req?.files?.img : null
-    console.log('RFI ', file)
-    const filePath = file !== null ? `recipeImgs/${file.name}` : ""
-    if (file !== null) {
-        console.log('FOLDER ', !fs.existsSync(path.join(__dirname, '..', 'public', 'recipeImgs')))
-        if (!fs.existsSync(path.join(__dirname, '..', 'public', 'recipeImgs'))) 
-            await fsPromises.mkdir(path.join(__dirname, '..', 'public', 'recipeImgs'))
-
-        file.mv(`public/recipeImgs/${file.name}`, err => {
-            if (err) {
-              console.error(err);
-              return res.status(500).send(err);
-            }
+    let error = []
+    let message = []
+    let filePath = ""
+    try {
+        if (!req.files) {
+            error.push({ FILEERROR: 'NO FILE UPLOADED!' })
+            //res.status(500).json({ message: 'NO FILE UPLOADED!' })
+        } else {
+            console.log(req.files)
+            let file = req.files.file
+            console.log("🚀 → file: recipeController.js:30 → cerateRecipe → FILE", file)
+            //file.mv("./uploads/" + file.name)
+            if (file !== null) {
+                filePath = `recipeImgs/${file.name}`
+                console.log('FOLDER ', !fs.existsSync(path.join(__dirname, '..', 'public', 'recipeImgs')))
+                if (!fs.existsSync(path.join(__dirname, '..', 'public', 'recipeImgs'))) 
+                    await fsPromises.mkdir(path.join(__dirname, '..', 'public', 'recipeImgs'))
         
-            console.log({ fileName: file.name, filePath });
-        })
-    }*/
+                file.mv(`public/recipeImgs/${file.name}`, err => {
+                    if (err) {
+                      console.error(err)
+                      return res.status(500).send(err);
+                    }
+                    console.log({ fileName: file.name, filePath })
+                    message.push({ SUCCESS: "FILE IS UPLOADED!" })
+                    /*res.status(200).json({
+                        message: "FILE IS UPLOADED!",
+                        data: {
+                            name: file.name,
+                            mimetype: file.mimetype,
+                            size: file.size,
+                        }
+                    })*/
+                })
+            }
+        }
+    } catch (err) {
+        error.push({"FILE UPLOADED ERROR" : err})
+        //res.status(500).json({"FILE UPLOADED ERROR" : err})
+    }
     //* https://www.npmjs.com/package/react-image-file-resizer
-    /* else {return res.status(400).json({ message: 'NO FILE UPLOADED!' })} */
+
     const { name, description, ingredients, completion, type, temperature, completionTime, difficulty } = req.body
     const params = { 
         name,
@@ -47,7 +69,7 @@ const cerateRecipe = async (req, res) => {
         ingredients,
         completionTime,
         description,
-        //image: filePath
+        image: filePath
     }
     const resp  = await services.saveDataToDb("recipes", params )
     res.status(200).json(resp)
@@ -67,7 +89,9 @@ const updateRecipe = async (req, res) => {
 const deleteRecipe = async (req, res) => {
     console.log("RQUB DEL " , req.body)
     const { id } = req.body
-    const resp  = await services.deleteDataFromDb(id)
+    const tableName = "recipes"
+    const resp  = await services.deleteDataFromDb(id, tableName)
+    console.log("🚀 → file: recipeController.js:72 → deleteRecipe → resp", resp)
     res.status(200).json(resp)
 }
 
