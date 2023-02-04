@@ -4,5 +4,8 @@ logs
 *.log
 files
 node_modules
-firebase/serviceAccountKey.json
 serviceAccountKey.json
+firebase/serviceAccountKey.json
+
+recipeImgs
+public/recipeImgs
