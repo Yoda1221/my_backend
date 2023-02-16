@@ -1,13 +1,14 @@
-const express       = require('express')
-const router        = express.Router()
-const path          = require('path')
-const { loginP }    = require('../controllers/AuthController')
+const express           = require('express')
+const router            = express.Router()
+const path              = require('path')
+const { loginP }        = require('../controllers/AuthController')
+const { allVehicle }    = require('../controllers/VehicleController')
 const { sendMessage, createCompletion } = require("../controllers/OpenAi")
 const { allRecipes, cerateRecipe, deleteRecipe, updateRecipe } = require('../controllers/RecipeController')
-const { allVehicle } = require('../controllers/VehicleController')
+const { getUser, getAllCustomers, getAllGeography, getAllProducts, getAllTransactions } = require('../controllers/DashboardController')
 
 //  FILEUPLOAD
-const { uploadFile }        = require('../controllers/DataController')
+const { uploadFile, uploadImage }   = require('../controllers/DataController')
 const fileUpload            = require('express-fileupload')
 const FileExtLimiter        = require('../middlewares/FileExtLimiter')
 const FileSizeLimiter       = require('../middlewares/FileSizeLimiter')
@@ -38,6 +39,7 @@ router.route('/recipes')
 
 
 //  UPLOAD FILE
+router.route('/imageupload').post(uploadImage)
 router.route('/image').post(
     fileUpload({ createParentPath: true }), 
     FileSizeLimiter,
@@ -45,5 +47,13 @@ router.route('/image').post(
     FileExtLimiter(['.png', '.jpg', '.jpeg']),
     uploadFile
 )
+
+//  TO DASHBOARD
+router.route('/getuser/:id').get(getUser)
+router.route('/getproducts').get(getAllProducts)
+router.route('/getcustomers').get(getAllCustomers)
+router.route('/getgeography').get(getAllGeography)
+router.route('/gettransactions').get(getAllTransactions)    //! NOT FINISHED
+
 
 module.exports = router

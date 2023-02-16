@@ -4,12 +4,10 @@ const path          = require('path')
 const colors        = require('colors')
 const express       = require('express')
 const cookieParser  = require('cookie-parser')
-const fileUpload    = require('express-fileupload')
 const corsOptions   = require('./config/corsOprions')
 const errorHandler  = require('./middlewares/ErrorHandler')
 const { logEvents, logger } = require('./middlewares/logEvents')
-
-const { milleniumFalcon, tieFighter } = require('./starwars/starships')
+const { tieFighter } = require('./starwars/starships')
 
 require('dotenv').config()
 

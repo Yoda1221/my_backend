@@ -54,6 +54,7 @@
             //  OBJECT
             const myFiles = document.getElementById('myFiles').files
             const formData = new FormData()
+            formData.append("ID", 1)
             Object.keys(myFiles).forEach(key => {formData.append(myFiles.item(key).name, myFiles.item(key))})
             const response = await fetch('http://localhost:5090/image', { method: 'POST', body: formData })
             const json = await response.json()

@@ -2,6 +2,42 @@ const moment    = require('moment')
 const mysqlConn = require('../config/mysqlConn')
 
 /**
+ ** QUERY DATA FROM DATABASSE WITH QUERY STRING
+ 
+ *  @param { String }   tablename 
+ *  @param { Object }   params
+ */
+const queryWithQueryString = async (queryString) => {
+    const data  = new Promise( async (resolve, reject) => {
+        await mysqlConn.query(queryString, (err, result) => {
+            if(err) return reject(err)
+            else return resolve(result)
+        })
+    })
+    return data
+}
+/**
+ ** QUERY DATA FROM DATABASSE
+ 
+ *  @param { String }   tablename 
+ *  @param { Object }   params
+ */
+const queryDataFromDb = async (fields, table, params) => {
+    let query
+    if (Object.keys(params).length > 0) {
+        query = `SELECT ${fields} FROM ${table} WHERE ?`
+    } else {
+        query = `SELECT ${fields} FROM ${table}`
+    }
+    const data  = new Promise( async (resolve, reject) => {
+        await mysqlConn.query(query, params, (err, result) => {
+            if(err) return reject(err)
+            else return resolve(result)
+        })
+    })
+    return data
+}
+/**
  ** QUERY DATA FROM DATABASSE
  
  *  @param { String }   tablename 
@@ -106,11 +142,13 @@ const timeStamp = () => { return moment(new Date()).format('YYYY-MM-DD HH:mm:ss'
 
 const services = {
     countData,
-    getDataFromDb,
-    saveDataToDb,
     timeStamp,
+    saveDataToDb,
+    getDataFromDb,
     updateDataInDb,
-    deleteDataFromDb
+    queryDataFromDb,
+    deleteDataFromDb,
+    queryWithQueryString
 }
 
 module.exports = services
