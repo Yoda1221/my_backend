@@ -1,7 +1,7 @@
 const express           = require('express')
 const router            = express.Router()
 const path              = require('path')
-const { loginP }        = require('../controllers/AuthController')
+const { loginP, userLoginP, userRegP }        = require('../controllers/AuthController')
 const { allVehicle }    = require('../controllers/VehicleController')
 const { sendMessage, createCompletion } = require("../controllers/OpenAi")
 const { allRecipes, cerateRecipe, deleteRecipe, updateRecipe } = require('../controllers/RecipeController')
@@ -28,7 +28,8 @@ router.route('/authV').post(loginP)
 router.route('/vehicles').get(allVehicle)
 
 //  RECIPES AUTH BACKEND
-//  SOON
+router.route('/login').post(userLoginP)
+router.route('/register').post(userRegP)
 
 //  RECIPE BACKEND
 router.route('/recipes')
