@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model ingredients {
+  id         Int      @id @default(autoincrement()) @db.UnsignedInt
+  recept_id  Int
+  hozzavalo  String   @default("") @db.VarChar(255)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  updated_at DateTime @default(now()) @db.Timestamp(0)
+}
+
+model recipes {
+  id             Int                @id @default(autoincrement()) @db.UnsignedInt
+  name           String             @db.VarChar(50)
+  description    String?            @db.Text
+  ingredients    String?            @db.Text
+  completion     String             @db.Text
+  type           recipes_type       @default(s)
+  temperature    Int                @default(180)
+  completionTime Int                @default(10)
+  difficulty     recipes_difficulty @default(k)
+  image          String?            @db.VarChar(255)
+  created_at     DateTime           @db.Timestamp(0)
+  updated_at     DateTime           @default(now()) @db.Timestamp(0)
+}
+
+model users {
+  id         Int      @id @default(autoincrement()) @db.UnsignedInt
+  username   String   @default("") @db.VarChar(50)
+  email      String   @default("") @db.VarChar(100)
+  password   String   @default("") @db.VarChar(100)
+  role       Boolean  @default(false)
+  country    String   @default("HU") @db.Char(3)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+}
+
+enum recipes_type {
+  l
+  h
+  s
+  k
+  o
+  e
+  c
+  m
+}
+
+enum recipes_difficulty {
+  e
+  g
+  k
+  z
+  n
+  m
+}

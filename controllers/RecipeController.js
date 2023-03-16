@@ -1,7 +1,5 @@
-const fs            = require('fs')
-const fsPromises    = fs.promises
-const path          = require("path")
 const services      = require('../services/methods')
+const { validationResult } = require('express-validator')
 
 /**
  ** ALL RECIPES FROM DATABASE
@@ -17,60 +15,13 @@ const allRecipes = async (req, res) => {
 }
 
 const cerateRecipe = async (req, res) => {
-    let error = []
-    let message = []
-    let filePath = ""
-    try {
-        if (!req.files) {
-            error.push({ FILEERROR: 'NO FILE UPLOADED!' })
-            //res.status(500).json({ message: 'NO FILE UPLOADED!' })
-        } else {
-            console.log(req.files)
-            let file = req.files.file
-            console.log("🚀 → file: recipeController.js:30 → cerateRecipe → FILE", file)
-            //file.mv("./uploads/" + file.name)
-            if (file !== null) {
-                filePath = `recipeImgs/${file.name}`
-                console.log('FOLDER ', !fs.existsSync(path.join(__dirname, '..', 'public', 'recipeImgs')))
-                if (!fs.existsSync(path.join(__dirname, '..', 'public', 'recipeImgs'))) 
-                    await fsPromises.mkdir(path.join(__dirname, '..', 'public', 'recipeImgs'))
-        
-                file.mv(`public/recipeImgs/${file.name}`, err => {
-                    if (err) {
-                      console.error(err)
-                      return res.status(500).send(err);
-                    }
-                    console.log({ fileName: file.name, filePath })
-                    message.push({ SUCCESS: "FILE IS UPLOADED!" })
-                    /*res.status(200).json({
-                        message: "FILE IS UPLOADED!",
-                        data: {
-                            name: file.name,
-                            mimetype: file.mimetype,
-                            size: file.size,
-                        }
-                    })*/
-                })
-            }
-        }
-    } catch (err) {
-        error.push({"FILE UPLOADED ERROR" : err})
-        //res.status(500).json({"FILE UPLOADED ERROR" : err})
-    }
     //* https://www.npmjs.com/package/react-image-file-resizer
-
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
     const { name, description, ingredients, completion, type, temperature, completionTime, difficulty } = req.body
-    const params = { 
-        name,
-        type,
-        difficulty,
-        temperature,
-        completion,
-        ingredients,
-        completionTime,
-        description,
-        image: filePath
-    }
+    const params = req.body
+    console.log("🚀 → req.body: ", req.body)
+    {name,type,difficulty,temperature,completion,ingredients,completionTime,description}
     const resp  = await services.saveDataToDb("recipes", params )
     res.status(200).json(resp)
 }
@@ -105,8 +56,8 @@ const uploadFile = async (req, res) => {
         files[key].mv(filepath, (err) => {
             if (err) return res.status(500).json({ status: "error", message: err })
         })
-    }) */
-    //return res.json({ status: 'success', message: Object.keys(files).toString() })
+    })
+    return res.json({ status: 'success', message: Object.keys(files).toString() }) */
     return res.json({ status: 'success', message: "Recept mentve" })
 }
 

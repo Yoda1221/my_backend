@@ -4,6 +4,7 @@ const path          = require('path')
 const colors        = require('colors')
 const express       = require('express')
 const cookieParser  = require('cookie-parser')
+const services      = require('./services/methods')
 const corsOptions   = require('./config/corsOprions')
 const errorHandler  = require('./middlewares/ErrorHandler')
 const { logEvents, logger } = require('./middlewares/logEvents')
@@ -14,6 +15,10 @@ require('dotenv').config()
 const app           = express()
 const httpServer    = http.createServer(app)
 const PORT          = process.env.PORT || 5091 //** 5090
+
+services.isInternetOnline( (res, isOnline) => { 
+    if (isOnline) res.send("NO INTERNET CONNECTION!")
+}) 
 
 app.use(logger)
 app.use(errorHandler)

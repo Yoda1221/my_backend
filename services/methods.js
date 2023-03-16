@@ -1,3 +1,4 @@
+const dns       = require('dns')
 const moment    = require('moment')
 const mysqlConn = require('../config/mysqlConn')
 
@@ -135,6 +136,17 @@ const countData = (tablename, params) => {
     return rows
 }
 
+const isInternetOnline = (callback) => {
+    dns.lookup('localhost', (error) => {
+        if (error && error.code == "ENOTFOUND") callback(false)
+        else callback(true)
+    })
+}
+/*
+* TEST
+isInternetOnline( isOnline => { return isOnline ? true: false }) 
+*/
+
 /**
  * *    CURRENT TIMESTAMP
  */
@@ -148,6 +160,7 @@ const services = {
     updateDataInDb,
     queryDataFromDb,
     deleteDataFromDb,
+    isInternetOnline,
     queryWithQueryString
 }
 
