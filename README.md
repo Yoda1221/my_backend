@@ -9,6 +9,11 @@
 
 - npx prisma db pull    <!-- create shema from dtatatables -->
 - npx prisma db push    <!-- update existing tables -->
+- npx prisma migrate dev --name <MIGRATION_NAME>
+- npx prisma generate --schema <PATH>
+
+##### Video
+[Learn Prisma In 60 Minutes](https://www.youtube.com/watch?v=RebA5J-rlwg&t=17s)
 
 ###### ERROR
 - Column count of mysql.proc is wrong. Expected 21, found 20. Created with MariaDB 100108, now running 100421

@@ -24,9 +24,9 @@ const uploadImage = async (req, res) => {
       else if (err) return res.send(`ERROR ${err}`)
 
       const classifiedsadd = { image: req.file.filename }
-      /* const sql = "INSERT INTO users SET ?";
+      const sql = "INSERT INTO users SET ?";
           connection.query(sql, classifiedsadd, (err, results) => {  if (err) throw err;
-      }) */
+      })
       // TODO RESIZING THE UPLOADED IMAGE
         res.json({ success: 1 })      
     })
@@ -34,17 +34,16 @@ const uploadImage = async (req, res) => {
 }
 
 const uploadFile = async (req, res) => {  
-  const { rId, newName }    = req.body
+  const { rId, newName } = req.body
   const files = req.files
   Object.keys(files).forEach(async key => {
-    const filepath = path.join(__dirname, '..', 'files', files[key].name)
     const ext = files[key].name.split('.').pop()
+    const filepath = path.join(__dirname, '..', 'files', files[key].name)
     files[key].mv(filepath, (err) => {
       if (err) return res.status(500).json({ status: "error", message: err })
-      imageResizer(files[key].name, newName+"."+ext )
+      imageResizer(files[key].name, newName + "." + ext )
     })
-    //  TODO  UPDATE DATABASE WITH FILENAME WHERE id = rId
-    const sql = `UPDATE recipes SET image="${newName}" WHERE id = "${rId}" `
+    const sql = `UPDATE recipes SET image="recipeImgs/${newName}.${ext}" WHERE id = "${rId}" `
     const response = await services.updateDataInDb(sql)
     console.log("🚀 → DataController.js:50 → RESPONSE", response)
     /* fs.readFile(filepath, (err, data) => {
@@ -62,7 +61,7 @@ const uploadFile = async (req, res) => {
 
 async function imageResizer(fileName, newName) {
   const filepath  = path.join(__dirname, '..', 'files', fileName)
-  const newPath   = path.join(__dirname, '..', 'files', newName )
+  const newPath   = path.join(__dirname, '..', 'public/recipeImgs', newName )
   try {
     sharp(filepath)
       .resize(400,300, {
