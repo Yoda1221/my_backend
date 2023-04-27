@@ -1,6 +1,6 @@
 const dns       = require('dns')
 const moment    = require('moment')
-const mysqlConn = require('../config/mysqlConn')
+//const mysqlConn = require('../config/mysqlConn')
 
 /**
  ** QUERY DATA FROM DATABASSE WITH QUERY STRING

@@ -14,6 +14,7 @@ require('dotenv').config()
 
 const app           = express()
 const httpServer    = http.createServer(app)
+const HOST          = "localhost"
 const PORT          = process.env.PORT || 5091 //** 5090
 
 services.isInternetOnline( (res, isOnline) => { 
@@ -36,13 +37,17 @@ app.all('*', (req, res) => {
     else                            res.type('txt').send('404 Not Found')
 })
 
-const time  = new Date()
-const df    = new Intl.DateTimeFormat("hu-hu", {
-    dateStyle: "full",
-    timeStyle: "full"
-})
+const time      = new Date()
+const df        = new Intl.DateTimeFormat("hu-HU", {dateStyle: "short",timeStyle: "medium"}) // full, long, medium, short
+
 
 httpServer.listen( PORT, () => {
-    logEvents(`SERVER IS RUNNING ON PORT: ${PORT}`, 'serverRunLog.txt')
-    console.log(`\n\n${tieFighter}\n\nSERVER IS RUNNING ON PORT:\t${PORT.brightCyan.bold}\t${colors.gray(df.format(time))}\n`.yellow)
+     
+    console.log(colors.white(`\n
+    ${colors.yellow('\t⎛  _  ⎞')}\tSERVER IS RUNNING:\t
+    ${colors.yellow('\t⎟=(_)=⎢')}\t${colors.cyan("ON " + HOST + ":" + PORT)}\t
+    ${colors.yellow('\t⎝     ⎠')}\t${colors.gray(df.format(time))}
+    \t==============================\n`))
 })
+
+//console.log(`\n\n${tieFighter}\n\nSERVER IS RUNNING ON PORT:\t${PORT.brightCyan.bold}\t${colors.gray(df.format(time))}\n`.yellow)

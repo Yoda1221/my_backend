@@ -50,6 +50,7 @@ module.exports = {
         const { email, password } = req.body
         if (!email || !password) return res.status(400).json({ message: 'ALL FIELDS ARE REQUIRED' })
         const params = { email }
+        //  TODO    GET USERDATA FROM DATABASE
         const foundUser = await services.getDataFromDb({base: "users"}, params)
         console.log("🚀 → foundUser", foundUser)
         if (foundUser.length === 0) return res.status(401).json({ message: 'UNAUTHORIZED!' })
@@ -94,6 +95,7 @@ module.exports = {
         bcrypt.hash(password, saltRounds, (err, hash) => {
             if (err)  throw err
             const params = { country, email, password: hash, username }
+            //  TODO CEATE NEW USER WITH PRISMA
             const response = services.saveDataToDb("users", params)
             console.log("🚀 → response", response)
             res.status(200).json(response)
